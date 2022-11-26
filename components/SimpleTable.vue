@@ -108,10 +108,13 @@ export default defineComponent({
     SmileOutlined,
     DownOutlined,
   },
-  setup() {
-    const { pokemons } = usePokemonStore()
+  async setup() {
+    const pokemonStore = usePokemonStore()
+
+    await pokemonStore.query.suspense()
+
     return {
-      data: pokemons,
+      data: pokemonStore.pokemons,
       columns,
     }
   },
