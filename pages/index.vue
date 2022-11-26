@@ -2,6 +2,7 @@
   <v-row justify="center" align="center">
     <v-col cols="12" sm="8" md="6">
       <h1 class="text-3xl font-bold underline">Hello world!</h1>
+      <SimpleTable></SimpleTable>
       <v-card class="logo py-4 d-flex justify-center">
         <NuxtLogo />
         <VuetifyLogo />
@@ -82,7 +83,10 @@
 </template>
 
 <script>
+import SimpleTable from '../components/SimpleTable.vue'
+
 export default {
   name: 'IndexPage',
+  components: { SimpleTable },
 }
 </script>
