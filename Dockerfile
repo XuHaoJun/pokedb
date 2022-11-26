@@ -1,4 +1,4 @@
-ARG NODE_IMAGE=node:18.12.1-alpine3.16
+ARG NODE_IMAGE=node:16.18.1-alpine3.16
 #
 ## Build Stage
 FROM ${NODE_IMAGE} as build-stage

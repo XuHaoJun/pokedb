@@ -15,6 +15,9 @@
     "prepare": "husky install",
     "test": "jest"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "lint-staged": {
     "*.{js,ts,vue}": "eslint --cache",
     "*.{css,scss,sass,html,vue}": "stylelint",
