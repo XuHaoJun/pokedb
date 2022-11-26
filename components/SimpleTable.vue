@@ -51,6 +51,7 @@
 import SmileOutlined from '@ant-design/icons-vue/SmileOutlined'
 import DownOutlined from '@ant-design/icons-vue/DownOutlined'
 import { defineComponent } from 'vue'
+import { usePokemonStore } from '~~/stores/pokemon.store'
 const columns = [
   {
     name: 'Name',
@@ -78,29 +79,29 @@ const columns = [
   },
 ]
 
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-]
+// const data = [
+//   {
+//     key: '1',
+//     name: 'John Brown',
+//     age: 32,
+//     address: 'New York No. 1 Lake Park',
+//     tags: ['nice', 'developer'],
+//   },
+//   {
+//     key: '2',
+//     name: 'Jim Green',
+//     age: 42,
+//     address: 'London No. 1 Lake Park',
+//     tags: ['loser'],
+//   },
+//   {
+//     key: '3',
+//     name: 'Joe Black',
+//     age: 32,
+//     address: 'Sidney No. 1 Lake Park',
+//     tags: ['cool', 'teacher'],
+//   },
+// ]
 
 export default defineComponent({
   components: {
@@ -108,8 +109,9 @@ export default defineComponent({
     DownOutlined,
   },
   setup() {
+    const { pokemons } = usePokemonStore()
     return {
-      data,
+      data: pokemons,
       columns,
     }
   },

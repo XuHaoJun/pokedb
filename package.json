@@ -53,6 +53,7 @@
   "dependencies": {
     "@ant-design/icons-vue": "^6.1.0",
     "@mdi/font": "^7.0.96",
+    "@pinia/nuxt": "^0.4.5",
     "ant-design-vue": "^3.2.15",
     "sass": "^1.56.1",
     "vuetify": "^3.0.2"
