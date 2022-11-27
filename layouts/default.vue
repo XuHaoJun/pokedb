@@ -29,9 +29,9 @@
       <v-spacer />
     </v-app-bar>
     <v-main>
-      <v-container>
+      <div class="md:container md:mx-auto">
         <NuxtPage />
-      </v-container>
+      </div>
     </v-main>
     <v-footer :absolute="!fixed" app>
       <span>&copy; {{ new Date().getFullYear() }}</span>
