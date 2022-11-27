@@ -24,12 +24,16 @@ export default defineNuxtPlugin((nuxt) => {
   if (process.server) {
     nuxt.hooks.hook('app:rendered', () => {
       vueQueryClient.value = dehydrate(queryClient)
+      vueQueryClient.value = null
+      queryClient.clear()
     })
   }
 
   if (process.client) {
     nuxt.hooks.hook('app:created', () => {
       hydrate(queryClient, vueQueryClient.value)
+      vueQueryClient.value = null
+      queryClient.clear()
     })
   }
 })

@@ -223,7 +223,8 @@ export default defineComponent({
 
     const data = computed(() => {
       const fullMoves = pokemonStore.moves.value || []
-      return pokemonStore.pokemons.value?.map((x: Pokemon) => {
+      const fullPokemons = pokemonStore.pokemons.value || []
+      return fullPokemons.map((x: Pokemon) => {
         const types = x.types.map((t: any) => {
           return {
             ...t,
@@ -257,7 +258,7 @@ export default defineComponent({
       showMoreTypes,
       pagination: {
         position: ['top', 'bottom'],
-        pageSize: 30,
+        defaultPageSize: 30,
         pageSizeOptions: ['10', '30', '50', '100'],
       },
     }
