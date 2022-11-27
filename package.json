@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.1.0",
+    "@ericrovell/rational": "^1.0.0",
     "@mdi/font": "^7.0.96",
     "@pinia/nuxt": "^0.4.5",
     "@tanstack/vue-query": "^4.17.1",

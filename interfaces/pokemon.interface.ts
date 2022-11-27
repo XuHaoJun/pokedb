@@ -26,6 +26,12 @@ export interface Type {
   type: Type2
 }
 
+export interface WeakType {
+  id: number
+  name: string
+  ratio: number
+}
+
 export interface OfficialArtwork {
   front_default: string
 }
@@ -44,6 +50,7 @@ export interface Move2 {
 }
 
 export interface Move {
+  id: number
   move: Move2
 }
 
@@ -53,6 +60,7 @@ export interface Pokemon {
   abilities: Ability[]
   stats: Stat[]
   types: Type[]
+  weakTypes: WeakType[]
   sprites: Sprites
   moves: Move[]
 }

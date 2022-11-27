@@ -27,6 +27,17 @@
           </a-tag>
         </span>
       </template>
+      <template v-else-if="column.key === 'weakTypes'">
+        <a-tag
+          v-for="t in record.weakTypes"
+          :key="t.name"
+          :color="getTypeColor(t.name)"
+        >
+          <span class="text-base">
+            {{ toRationString(t.ratio) }} * {{ t.name }}
+          </span>
+        </a-tag>
+      </template>
       <template v-else-if="column.key === 'abilities'">
         <span>
           <a-tag
@@ -60,14 +71,20 @@
       </template>
       <template v-else-if="column.key === 'moves'">
         <a-tag
-          v-for="m in record.previewMoves"
+          v-for="m in showMoreMoves[record.name]
+            ? record.moves
+            : record.previewMoves"
           :key="m.move.name"
           :color="m.color"
         >
-          {{ m.move.name }}
+          <span class="text-base">
+            {{ m.move.name }}
+          </span>
         </a-tag>
         <div>
-          <v-btn variant="flat">Show More...</v-btn>
+          <v-btn variant="flat" @click="handleShowMoreMoves(record)"
+            >Show {{ showMoreMoves[record.name] ? 'Less' : 'More' }}...</v-btn
+          >
         </div>
       </template>
       <template v-else-if="column.key === 'action'">
@@ -89,6 +106,7 @@
 <script lang="ts">
 // import SmileOutlined from '@ant-design/icons-vue/SmileOutlined'
 import * as _ from 'lodash-es'
+import { rational } from '@ericrovell/rational'
 import DownOutlined from '@ant-design/icons-vue/DownOutlined'
 import { defineComponent, computed } from 'vue'
 import type { Pokemon } from '~~/interfaces/pokemon.interface'
@@ -104,6 +122,11 @@ const columns = [
     name: 'Types',
     dataIndex: 'types',
     key: 'types',
+  },
+  {
+    name: 'Weak Types',
+    dataIndex: 'types',
+    key: 'weakTypes',
   },
   {
     name: 'Abilities',
@@ -159,6 +182,14 @@ const columns = [
   },
 ]
 
+function toRationString(n: number): string {
+  if (n > 0 && n < 1) {
+    return rational(n).toString()
+  } else {
+    return `${n}`
+  }
+}
+
 function getTypeColor(typeName?: string): string {
   const mapping: Record<string, string> = {
     fire: '#F08030',
@@ -183,30 +214,6 @@ function getTypeColor(typeName?: string): string {
   return mapping[typeName || ''] || '#FAFAFA'
 }
 
-// const data = [
-//   {
-//     key: '1',
-//     name: 'John Brown',
-//     age: 32,
-//     address: 'New York No. 1 Lake Park',
-//     tags: ['nice', 'developer'],
-//   },
-//   {
-//     key: '2',
-//     name: 'Jim Green',
-//     age: 42,
-//     address: 'London No. 1 Lake Park',
-//     tags: ['loser'],
-//   },
-//   {
-//     key: '3',
-//     name: 'Joe Black',
-//     age: 32,
-//     address: 'Sidney No. 1 Lake Park',
-//     tags: ['cool', 'teacher'],
-//   },
-// ]
-
 export default defineComponent({
   components: {
     // SmileOutlined,
@@ -221,9 +228,18 @@ export default defineComponent({
       ])
     }
 
+    const showMoreMoves = reactive<Record<string, boolean>>({})
+    function handleShowMoreMoves(pokemon: Pokemon) {
+      showMoreMoves[pokemon.name] = !showMoreMoves[pokemon.name]
+    }
+
     const data = computed(() => {
       const fullMoves = pokemonStore.moves.value || []
       const fullPokemons = pokemonStore.pokemons.value || []
+      console.log('computed', !fullMoves.length || !fullPokemons.length)
+      if (!fullMoves.length || !fullPokemons.length) {
+        return []
+      }
       return fullPokemons.map((x: Pokemon) => {
         const types = x.types.map((t: any) => {
           return {
@@ -231,35 +247,38 @@ export default defineComponent({
             color: getTypeColor(t.type.name),
           }
         })
-        const previewMoves = _.take(x.moves, 10).map((m) => {
-          const fullMove = fullMoves.find((fm) => fm.name === m.move.name)
+        const moves = x.moves.map((m) => {
+          const fullMoveIdx = _.sortedIndexBy(fullMoves, m as any, (x) => x.id)
+          const fullMove = fullMoves[fullMoveIdx]
           return {
             ...m,
             move: fullMove ?? m.move,
             color: getTypeColor(fullMove?.type.name),
           }
         })
+        const previewMoves = _.take(moves, 10)
         return {
           ...x,
           types,
+          moves,
           previewMoves,
         }
       })
     })
-    // const data = computed(() => poke)
-
-    const showMoreTypes = ref<Record<string, boolean>>({})
 
     const isLoading = pokemonStore.querys.pokemons.isLoading
     return {
       data,
       isLoading,
       columns,
-      showMoreTypes,
+      showMoreMoves,
+      handleShowMoreMoves,
+      getTypeColor,
+      toRationString,
       pagination: {
         position: ['top', 'bottom'],
-        defaultPageSize: 30,
-        pageSizeOptions: ['10', '30', '50', '100'],
+        defaultPageSize: 10,
+        pageSizeOptions: ['10', '20', '30', '50', '100'],
       },
     }
   },
